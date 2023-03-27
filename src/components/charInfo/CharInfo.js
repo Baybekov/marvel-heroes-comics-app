@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import MarvelService from "../../services/MarvelService";
+import { useParams, Link } from "react-router-dom";
+
+import useMarvelService from "../../services/MarvelService";
 import { PropTypes } from "prop-types";
 
 import Spinner from "../spinner/Spinner";
@@ -11,11 +13,10 @@ import "./charInfo.scss";
 
 const CharInfo = (props) => {
 
-  const [char, setChar] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
-  const marvelService = new MarvelService();
+  const [char, setChar] = useState(null);
+
+  const {error, loading, getCharacter, clearError} = useMarvelService();
 
   useEffect(() => {
     updateChar()
@@ -23,31 +24,18 @@ const CharInfo = (props) => {
 
 
   const updateChar = () => {
+    clearError();
     const { charId } = props;
     if (!charId) {
       return;
     }
 
-    onCharLoading();
-
-    marvelService
-      .getCharacter(charId)
+      getCharacter(charId)
       .then(onCharLoaded)
-      .catch(onError);
   };
 
   const onCharLoaded = (char) => {
     setChar(char);
-    setLoading(false);
-  };
-
-  const onCharLoading = () => {
-    setLoading(true);
-  };
-
-  const onError = () => {
-    setLoading(false);
-    setError(true);
   };
 
 
@@ -102,10 +90,12 @@ const View = ({ char }) => {
             comics.map((item, i) => {
                 // eslint-disable-next-line
                 if(i>9) return
+                const url = item.resourceURI.split("/").pop();
                 return (
-                    <li key={i} className="char__comics-item">
+                    <Link to={`/comics/${url}`} key={i} className="char__comics-item">
                         {item.name}
-                    </li>
+                    </Link>
+                    
                 )
             })
         }
