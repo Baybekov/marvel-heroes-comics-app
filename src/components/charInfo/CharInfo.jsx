@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import useMarvelService from "../../services/MarvelService";
 import { PropTypes } from "prop-types";

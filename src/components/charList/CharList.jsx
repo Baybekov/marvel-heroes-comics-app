@@ -1,5 +1,6 @@
 import {useState, useEffect, useRef} from 'react';
 import PropTypes from 'prop-types'
+import {CSSTransition, TransitionGroup} from 'react-transition-group';
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -9,6 +10,7 @@ import useMarvelService from '../../services/MarvelService';
 import './charList.scss';
 
 const CharList = (props) => {
+
 
     const [charList, setCharList] = useState([]);
     const [newItemLoading, setNewItemLoading] = useState(false);
@@ -35,7 +37,7 @@ const CharList = (props) => {
             ended = true;
         }
         setCharList(charList => [...charList, ...newCharList]);
-        setNewItemLoading(newItemLoading => false);
+        setNewItemLoading(false);
         setOffset(offset => offset + 9);
         setCharEnded(charEnded => ended);
     }
@@ -51,6 +53,8 @@ const CharList = (props) => {
         itemRefs.current[id].focus();
     }
 
+
+
     function renderItems(arr) {
         const items =  arr.map((item, i) => {
             let charImg = {'objectFit' : 'cover'};
@@ -59,6 +63,7 @@ const CharList = (props) => {
             }
             
             return (
+                <CSSTransition key={item.id} timeout={500} classNames="char__item" >
                 <li 
                     className="char__item"
                     tabIndex={0}
@@ -77,12 +82,15 @@ const CharList = (props) => {
                         <img src={item.thumbnail} alt={item.name} style={charImg}/>
                         <div className="char__name">{item.name}</div>
                 </li>
+                </CSSTransition>
             )
         });
 
         return (
             <ul className="char__grid">
-                {items}
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
             </ul>
         )
     }
@@ -92,6 +100,7 @@ const CharList = (props) => {
 
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading && !newItemLoading ? <Spinner/> : null;
+
 
         return (
             <div className="char__list">

@@ -9,37 +9,36 @@ import AppBanner from "../appBanner/AppBanner";
 import "./SingleComicPage.scss";
 
 const SingleComicPage = () => {
-    const {comicId} = useParams();
-    const [comic, setComic] = useState(null);
-    const {loading, error, getComics, clearError} = useMarvelService();
+  const { comicId } = useParams();
+  const [comic, setComic] = useState(null);
+  const { loading, error, getComics, clearError } = useMarvelService();
 
-    useEffect(() => {
-        updateComic()
-    }, [comicId])
+  useEffect(() => {
+    updateComic();
+  }, [comicId]);
 
-    const updateComic = () => {
-        clearError();
-        getComics(comicId)
-            .then(onComicLoaded)
-    }
+  const updateComic = () => {
+    clearError();
+    getComics(comicId).then(onComicLoaded);
+  };
 
-    const onComicLoaded = (comic) => {
-        setComic(comic);
-    }
+  const onComicLoaded = (comic) => {
+    setComic(comic);
+  };
 
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !comic) ? <View comic={comic}/> : null;
+  const errorMessage = error ? <ErrorMessage /> : null;
+  const spinner = loading ? <Spinner /> : null;
+  const content = !(loading || error || !comic) ? <View comic={comic} /> : null;
 
-    return (
-        <>
-            <AppBanner/>
-            {errorMessage}
-            {spinner}
-            {content}
-        </>
-    )
-}
+  return (
+    <>
+      <AppBanner />
+      {errorMessage}
+      {spinner}
+      {content}
+    </>
+  );
+};
 
 const View = ({ comic }) => {
   const { title, description, thumbnail, pageCount, language, price } = comic;
